@@ -1,0 +1,33 @@
+{
+  "name": "azurabot",
+  "description": "A bot for AzuraCast",
+  "version": "0.0.1",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -n TS,JS -c blue,yellow \"pnpm run dev:ts\" \"pnpm run dev:js\"",
+    "dev:ts": "tsc -w",
+    "dev:js": "nodemon dist",
+    "lint": "eslint src/**",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "6gh",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.3.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^9.3.0",
+    "globals": "^15.2.0",
+    "nodemon": "^3.1.0",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.9.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "chalk": "^5.3.0",
+    "chalk-template": "^1.1.0",
+    "discord.js": "^14.15.2",
+    "dotenv": "^16.4.5"
+  }
+}
