@@ -44,7 +44,7 @@ export class AzuraBot extends Client {
     }).filter((x) => x.isFile() && x.name.endsWith(".js"));
 
     for (const file of textCommandFiles) {
-      const command = (await import(path.join(commandsDir, "text", file.name)))
+      const command = (await import(path.join(file.parentPath, file.name)))
         .default as TextCommand | undefined;
 
       if (!command) {
@@ -78,11 +78,11 @@ export class AzuraBot extends Client {
       recursive: true,
       withFileTypes: true,
     }).filter((x) => x.isFile() && x.name.endsWith(".js"));
+    let eventCount = 0;
 
     for (const file of eventFiles) {
-      const event = (await import(path.join(eventsDir, file.name))).default as
-        | BotEvent<keyof ClientEvents>
-        | undefined;
+      const event = (await import(path.join(file.parentPath, file.name)))
+        .default as BotEvent<keyof ClientEvents> | undefined;
 
       if (!event) {
         console.warn(
@@ -99,7 +99,10 @@ export class AzuraBot extends Client {
       }
 
       this.on(event.event, event.execute);
+      eventCount++;
     }
+
+    console.log(`Loaded ${eventCount} events from ${eventFiles.length} files`);
   }
 
   public start(token: string): void {

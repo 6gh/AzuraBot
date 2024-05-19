@@ -1,5 +1,5 @@
-import { BotEvent } from "../classes/event.js";
-import { Bot, Vars } from "../index.js";
+import { BotEvent } from "../../classes/event.js";
+import { Bot, Vars } from "../../index.js";
 
 export default new BotEvent("messageCreate", async (message) => {
   if (message.author.bot) return;

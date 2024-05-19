@@ -3,6 +3,7 @@ import { BotEvent } from "../classes/event.js";
 import axios, { isAxiosError, AxiosError } from "axios";
 import { Vars } from "../index.js";
 import { ActivityType } from "discord.js";
+import { HandleAxiosError } from "../utils/handleAxiosError.js";
 
 export default new BotEvent("ready", async (client) => {
   console.log(`Logged in as ${client.user?.tag}`);
@@ -12,7 +13,7 @@ export default new BotEvent("ready", async (client) => {
   // if it isn't, set the status to "Playing ~help"
   try {
     const response = await axios.get(
-      "https://radio.blackmidi.wiki/api/admin/settings",
+      `${Vars.AZURACAST_API_URL}/admin/settings`,
       {
         headers: {
           "X-API-Key": Vars.AZURACAST_API_KEY,
@@ -31,33 +32,7 @@ export default new BotEvent("ready", async (client) => {
       ],
     });
   } catch (error: AxiosError | unknown) {
-    if (!isAxiosError(error) || !error.response) {
-      // Something happened in setting up the request that triggered an Error
-      console.error(
-        "[ERROR] Failed to reach AzuraCast API. An unknown error occurred."
-      );
-      console.error(error);
-    } else {
-      if (error.response.status === 404) {
-        // Not found
-        console.error(
-          "[ERROR] Failed to reach AzuraCast API. Check your API URL."
-        );
-      } else if (error.response.status === 403) {
-        // Forbidden
-        console.error(
-          "[ERROR] Failed to reach AzuraCast API. Check your API Key."
-        );
-      } else if (error.response.status === 500) {
-        // Unauthorized
-        console.error(
-          "[ERROR] Failed to reach AzuraCast API. Server error, please try again later."
-        );
-      }
-
-      console.error(error.response.data);
-      console.error(error.response.headers);
-    }
+    HandleAxiosError(error);
 
     client.user?.setPresence({
       activities: [

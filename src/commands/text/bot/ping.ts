@@ -1,4 +1,4 @@
-import { TextCommand } from "../../classes/command/text.js";
+import { TextCommand } from "../../../classes/command/text.js";
 
 export default new TextCommand({
   name: "ping",
