@@ -1,4 +1,4 @@
-import { Client, ClientEvents } from "discord.js";
+import { Client, ClientEvents, SlashCommandBuilder } from "discord.js";
 import path from "path";
 import { readdirSync } from "fs";
 import { TextCommand } from "./command/text.js";
@@ -7,7 +7,7 @@ import { BotEvent } from "./event.js";
 export class AzuraBot extends Client {
   public commands = {
     text: new Map<string, TextCommand>(),
-    slash: new Map<string, Function>(),
+    slash: new Map<string, SlashCommandBuilder>(),
   };
 
   constructor() {
@@ -66,6 +66,36 @@ export class AzuraBot extends Client {
 
     console.log(
       `Loaded ${this.commands.text.size} text commands from ${textCommandFiles.length} files`
+    );
+
+    const slashCommandFiles = readdirSync(path.join(commandsDir, "slash"), {
+      recursive: true,
+      withFileTypes: true,
+    });
+
+    for (const file of slashCommandFiles) {
+      const command = (await import(path.join(file.parentPath, file.name)))
+        .default as SlashCommandBuilder | undefined;
+
+      if (!command) {
+        console.warn(
+          `[WARN] Command ${file.name} does not have a default export`
+        );
+        continue;
+      }
+
+      if (!command.name) {
+        console.warn(
+          `[WARN] Command ${file.name} does not have a name or execute function`
+        );
+        continue;
+      }
+
+      this.commands.slash.set(command.name, command);
+    }
+
+    console.log(
+      `Loaded ${this.commands.slash.size} text commands from ${slashCommandFiles.length} files`
     );
 
     const eventsDir = path.resolve(
