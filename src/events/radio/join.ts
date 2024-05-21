@@ -1,6 +1,6 @@
 import axios from "axios";
 import { BotEvent } from "../../classes/event.js";
-import { Vars, prisma } from "../../index.js";
+import { Vars, azuraClient, prisma } from "../../index.js";
 import {
   joinVoiceChannel,
   createAudioResource,
@@ -26,14 +26,7 @@ export default new BotEvent("voiceStateUpdate", async (oldState, newState) => {
       );
 
       try {
-        const response = await axios.get(
-          `${Vars.AZURACAST_API_URL}/station/${entry.radioStation}`,
-          {
-            headers: {
-              "X-API-Key": Vars.AZURACAST_API_KEY,
-            },
-          }
-        );
+        const station = await azuraClient.Stations.get(2)
 
         const connection = joinVoiceChannel({
           channelId: newState.channelId,
@@ -41,13 +34,13 @@ export default new BotEvent("voiceStateUpdate", async (oldState, newState) => {
           adapterCreator: newState.guild.voiceAdapterCreator,
         });
 
-        const resource = createAudioResource(response.data.listen_url);
+        const resource = createAudioResource(station.listen_url);
 
         const player = createAudioPlayer();
         connection.subscribe(player);
         player.play(resource);
 
-        console.log(`Playing ${response.data.name} on ${entry.id}`);
+        console.log(`Playing ${station.name} on ${entry.id}`);
       } catch (error: unknown) {
         HandleAxiosError(error);
       }

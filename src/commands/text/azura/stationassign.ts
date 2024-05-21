@@ -1,6 +1,5 @@
-import axios from "axios";
 import { TextCommand } from "../../../classes/command/text.js";
-import { Vars, prisma } from "../../../index.js";
+import { azuraClient, prisma } from "../../../index.js";
 import { HandleAxiosError } from "../../../utils/handleAxiosError.js";
 
 export default new TextCommand({
@@ -11,7 +10,7 @@ export default new TextCommand({
       return;
     }
 
-    let channelSpecified = message.mentions.channels.first();
+    const channelSpecified = message.mentions.channels.first();
 
     if (!channelSpecified) {
       message.reply("Please mention a channel.");
@@ -19,14 +18,7 @@ export default new TextCommand({
     }
 
     try {
-      const response = await axios.get(
-        `${Vars.AZURACAST_API_URL}/station/${args[0]}`,
-        {
-          headers: {
-            "X-API-Key": Vars.AZURACAST_API_KEY,
-          },
-        }
-      );
+      const station = await azuraClient.Stations.get(args[0]);
 
       const channel = await prisma.channel.findFirst({
         where: {
@@ -38,11 +30,11 @@ export default new TextCommand({
         await prisma.channel.create({
           data: {
             id: channelSpecified.id,
-            radioStation: response.data.id,
+            radioStation: station.id,
           },
         });
         message.reply(
-          `Channel ${channelSpecified.url} has been assigned to ${response.data.name}`
+          `Channel ${channelSpecified.url} has been assigned to ${station.name}`
         );
       }
     } catch (error: unknown) {

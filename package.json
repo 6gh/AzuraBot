@@ -28,6 +28,7 @@
     "@discordjs/voice": "^0.17.0",
     "@prisma/client": "5.14.0",
     "axios": "^1.6.8",
+    "azuracast.js": "0.2.0-alpha.1",
     "chalk": "^5.3.0",
     "chalk-template": "^1.1.0",
     "discord.js": "^14.15.2",
