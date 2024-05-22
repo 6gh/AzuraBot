@@ -27,6 +27,7 @@ export default new TextCommand({
         embeds: [embed],
       });
     } catch (error: unknown) {
+      console.error(error);
       const msg = HandleAxiosError(error);
       message.reply(msg);
     }

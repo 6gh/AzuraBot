@@ -1,13 +1,14 @@
-import { Client, ClientEvents, SlashCommandBuilder } from "discord.js";
+import { Client, ClientEvents } from "discord.js";
 import path from "path";
 import { readdirSync } from "fs";
 import { TextCommand } from "./command/text.js";
 import { BotEvent } from "./event.js";
+import { SlashCommand } from "./command/slash.js";
 
 export class AzuraBot extends Client {
   public commands = {
     text: new Map<string, TextCommand>(),
-    slash: new Map<string, SlashCommandBuilder>(),
+    slash: new Map<string, SlashCommand>(),
   };
 
   constructor() {
@@ -71,11 +72,11 @@ export class AzuraBot extends Client {
     const slashCommandFiles = readdirSync(path.join(commandsDir, "slash"), {
       recursive: true,
       withFileTypes: true,
-    });
+    }).filter((x) => x.isFile() && x.name.endsWith(".js"));
 
     for (const file of slashCommandFiles) {
       const command = (await import(path.join(file.parentPath, file.name)))
-        .default as SlashCommandBuilder | undefined;
+        .default as SlashCommand | undefined;
 
       if (!command) {
         console.warn(
@@ -84,14 +85,14 @@ export class AzuraBot extends Client {
         continue;
       }
 
-      if (!command.name) {
+      if (!command.meta.name || !command.execute) {
         console.warn(
           `[WARN] Command ${file.name} does not have a name or execute function`
         );
         continue;
       }
 
-      this.commands.slash.set(command.name, command);
+      this.commands.slash.set(command.meta.name, command);
     }
 
     console.log(
