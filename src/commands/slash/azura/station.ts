@@ -32,6 +32,8 @@ export default new SlashCommand(
         )
     ),
   async ({ interaction }) => {
+    if (!interaction.guildId) return;
+
     switch (interaction.options.getSubcommand()) {
       case "list":
         await interaction.deferReply();
@@ -74,19 +76,21 @@ export default new SlashCommand(
 
         const station = await azuraClient.Stations.get(stationId);
 
-        await prisma.channel.upsert({
-          where: { id: vc.id },
+        await prisma.assigns.upsert({
+          where: { guildId: interaction.guildId },
           create: {
-            id: vc.id,
+            channelId: vc.id,
+            guildId: interaction.guildId,
             radioStation: stationId,
           },
           update: {
+            channelId: vc.id,
             radioStation: stationId,
           },
         });
 
         await interaction.editReply(
-          `Assigned station ${station.name} to ${vc.name}`
+          `Assigned station **${station.name}** to ${vc.name} in this server.`
         );
         break;
       default:

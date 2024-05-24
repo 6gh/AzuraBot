@@ -4,6 +4,7 @@ import { readdirSync } from "fs";
 import { TextCommand } from "./command/text.js";
 import { BotEvent } from "./event.js";
 import { SlashCommand } from "./command/slash.js";
+import { Log } from "./log.js";
 
 export class AzuraBot extends Client {
   public commands = {
@@ -37,7 +38,7 @@ export class AzuraBot extends Client {
       path.join(import.meta.dirname, "..", "commands")
     );
 
-    console.log(`Looking for commands in ${commandsDir}`);
+    Log.info(`Looking for commands in ${commandsDir}`);
 
     const textCommandFiles = readdirSync(path.join(commandsDir, "text"), {
       recursive: true,
@@ -65,7 +66,7 @@ export class AzuraBot extends Client {
       this.commands.text.set(command.name, command);
     }
 
-    console.log(
+    Log.info(
       `Loaded ${this.commands.text.size} text commands from ${textCommandFiles.length} files`
     );
 
@@ -95,7 +96,7 @@ export class AzuraBot extends Client {
       this.commands.slash.set(command.meta.name, command);
     }
 
-    console.log(
+    Log.info(
       `Loaded ${this.commands.slash.size} text commands from ${slashCommandFiles.length} files`
     );
 
@@ -103,7 +104,7 @@ export class AzuraBot extends Client {
       path.join(import.meta.dirname, "..", "events")
     );
 
-    console.log(`Looking for events in ${eventsDir}`);
+    Log.info(`Looking for events in ${eventsDir}`);
 
     const eventFiles = readdirSync(eventsDir, {
       recursive: true,
@@ -133,7 +134,7 @@ export class AzuraBot extends Client {
       eventCount++;
     }
 
-    console.log(`Loaded ${eventCount} events from ${eventFiles.length} files`);
+    Log.info(`Loaded ${eventCount} events from ${eventFiles.length} files`);
   }
 
   public start(token: string): void {

@@ -6,24 +6,30 @@ import {
   createAudioResource,
   createAudioPlayer,
   getVoiceConnection,
+  VoiceConnectionStatus,
 } from "@discordjs/voice";
 import { HandleAxiosError } from "../../utils/handleAxiosError.js";
+import { ChannelType } from "discord.js";
+import { Log } from "../../classes/log.js";
 
 export default new BotEvent("voiceStateUpdate", async (oldState, newState) => {
-  if (oldState.channelId === null && newState.channelId !== null) {
-    console.log(newState.channelId);
+  if (newState.member?.user.bot) return;
 
-    const entry = await prisma.channel.findFirst({
+  if (newState.channelId !== null) {
+    Log.debug(`voiceStateUpdate called; member joined: ${newState.channelId}`);
+
+    const entry = await prisma.assigns.findFirst({
       where: {
-        id: newState.channelId,
+        channelId: newState.channelId,
+        guildId: newState.guild.id,
       },
     });
 
-    console.log(entry);
+    Log.debug(entry);
 
     if (entry) {
-      console.log(
-        `User ${newState.member?.user.tag} joined channel ${entry.id}`
+      Log.info(
+        `User ${newState.member?.user.tag} joined channel ${entry.channelId}`
       );
 
       try {
@@ -36,7 +42,7 @@ export default new BotEvent("voiceStateUpdate", async (oldState, newState) => {
               )[0].url
             : station.mounts[0].url;
 
-        console.log(bestAudio);
+        Log.debug(bestAudio);
 
         const connection = joinVoiceChannel({
           channelId: newState.channelId,
@@ -44,31 +50,59 @@ export default new BotEvent("voiceStateUpdate", async (oldState, newState) => {
           adapterCreator: newState.guild.voiceAdapterCreator,
         });
 
-        const resource = createAudioResource(bestAudio);
+        connection.on("stateChange", (_, newVoiceState) => {
+          if (newVoiceState.status === VoiceConnectionStatus.Ready) {
+            Log.debug("Connection is ready");
+
+            if (newState.channel?.type === ChannelType.GuildStageVoice) {
+              if (newState.guild.members.me?.voice.suppress) {
+                Log.debug("Unsuppressing bot");
+                newState.guild.members.me?.voice.setSuppressed(false);
+              }
+            }
+          }
+        });
+
+        const resource = createAudioResource(station.listen_url);
 
         const player = createAudioPlayer();
         connection.subscribe(player);
         player.play(resource);
 
-        console.log(`Playing ${station.name} on ${entry.id}`);
+        Log.info(`Playing ${station.name} on ${entry.channelId}`);
       } catch (error: unknown) {
         HandleAxiosError(error);
       }
     }
   }
-  if (oldState.channelId !== null && newState.channelId === null) {
-    console.log(oldState.channelId);
+  if (oldState.channelId && newState.channelId === null) {
+    Log.debug(oldState.channelId);
+
+    const assign = await prisma.assigns.findFirst({
+      where: {
+        channelId: oldState.channelId,
+        guildId: oldState.guild.id,
+      },
+    });
+
+    if (!assign) {
+      return;
+    }
+
+    if (oldState.channelId !== assign.channelId) {
+      return;
+    }
 
     const connection = getVoiceConnection(oldState.guild.id);
 
     if (connection) {
-      console.log(
+      Log.info(
         `User ${oldState.member?.user.tag} left channel ${oldState.channelId}`
       );
 
       connection.destroy();
 
-      console.log(`Stopped playing on ${oldState.channelId}`);
+      Log.info(`Stopped playing on ${oldState.channelId}`);
     }
   }
 });

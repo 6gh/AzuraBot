@@ -10,7 +10,10 @@ datasource db {
   url      = env("BOT_DATABASE_URL")
 }
 
-model Channel {
-  id            String   @id
-  radioStation  Int
+model Assigns {
+  channelId             String   @id
+  guildId               String   @unique
+  radioStation          Int
+  updatesChannelId      String
+  mountSelected         String
 }

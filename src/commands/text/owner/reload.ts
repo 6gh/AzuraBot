@@ -1,6 +1,7 @@
 import { REST, Routes } from "discord.js";
 import { TextCommand } from "../../../classes/command/text.js";
 import { Vars } from "../../../index.js";
+import { Log } from "../../../classes/log.js";
 
 export default new TextCommand({
   name: "reload",
@@ -22,9 +23,7 @@ export default new TextCommand({
     const rest = new REST().setToken(bot.token || Vars.BOT_TOKEN);
 
     try {
-      console.log(
-        `Started refreshing application (/) commands for ${guild.name}`
-      );
+      Log.info(`Started refreshing application (/) commands for ${guild.name}`);
 
       if (!bot.application?.id) {
         throw new Error("Bot has no application id");
@@ -35,8 +34,8 @@ export default new TextCommand({
         { body: commands }
       );
 
-      console.log(data);
-      console.log(
+      Log.debug(data);
+      Log.info(
         `Successfully reloaded application (/) commands for ${guild.name}`
       );
       channel.send("Successfully reloaded application (/) commands");
