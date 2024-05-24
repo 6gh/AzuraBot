@@ -3,5 +3,6 @@
     "overrideConfigFile": "./eslint.config.js"
   },
   "eslint.experimental.useFlatConfig": true,
-  "eslint.format.enable": true
+  "eslint.format.enable": true,
+  "files.autoSave": "onWindowChange"
 }

@@ -15,6 +15,6 @@ export class Log {
 
   public static debug(message: unknown) {
     if (process.env.NODE_ENV !== "development") return;
-    console.debug(chalkTemplate`{bgMagenta [DEBUG]} ${message}`);
+    console.debug(chalkTemplate`{bgMagenta [DEBUG]} ${JSON.stringify(message, null, 4)}`);
   }
 }

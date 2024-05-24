@@ -63,7 +63,11 @@ export default new BotEvent("voiceStateUpdate", async (oldState, newState) => {
           }
         });
 
-        const resource = createAudioResource(station.listen_url);
+        const resource = createAudioResource(station.listen_url, {
+          inlineVolume: true,
+        });
+
+        resource.volume?.setVolume(0.5)
 
         const player = createAudioPlayer();
         connection.subscribe(player);

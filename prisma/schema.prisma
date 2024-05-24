@@ -14,6 +14,9 @@ model Assigns {
   channelId             String   @id
   guildId               String   @unique
   radioStation          Int
-  updatesChannelId      String
-  mountSelected         String
+  mountSelected         Int      @default(-1)
+  paused                Boolean  @default(false)
+  standbyMode           Boolean  @default(true)
+  volume                Int?
+  updatesChannelId      String?
 }
