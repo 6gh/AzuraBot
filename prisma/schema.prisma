@@ -16,7 +16,5 @@ model Assigns {
   radioStation          Int
   mountSelected         Int      @default(-1)
   paused                Boolean  @default(false)
-  standbyMode           Boolean  @default(true)
   volume                Int?
-  updatesChannelId      String?
 }
