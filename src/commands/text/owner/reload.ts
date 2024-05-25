@@ -5,7 +5,7 @@ import { Log } from "../../../classes/log.js";
 
 export default new TextCommand({
   name: "reload",
-  execute: async ({ message, args, bot }) => {
+  execute: async ({ message, bot }) => {
     if (!message.guild) {
       message.reply(":skull: This command can only be used in servers");
       return;
@@ -14,8 +14,9 @@ export default new TextCommand({
     const channel = message.channel;
     const guild = message.guild;
 
-    let commands = [];
+    const commands = [];
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const [_, command] of bot.commands.slash) {
       commands.push(command.meta.toJSON());
     }
@@ -40,10 +41,8 @@ export default new TextCommand({
       );
       channel.send("Successfully reloaded application (/) commands");
     } catch (error) {
-      console.error(error);
-      console.error(
-        `Failed to reload application (/) commands for ${guild.name}`
-      );
+      Log.error(error);
+      Log.error(`Failed to reload application (/) commands for ${guild.name}`);
       channel.send("Failed to reload application (/) commands");
     }
   },

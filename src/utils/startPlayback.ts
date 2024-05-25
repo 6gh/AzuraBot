@@ -6,10 +6,10 @@ import {
 } from "@discordjs/voice";
 import { Log } from "../classes/log.js";
 import { ChannelType, Guild, VoiceBasedChannel } from "discord.js";
-import { Vars, prisma } from "../index.js";
+import { Vars } from "../index.js";
 import { Assigns } from "@prisma/client";
 
-export async function startPlayback(
+export function startPlayback(
   guild: Guild,
   channel: VoiceBasedChannel,
   audioUrl: string,
@@ -44,9 +44,9 @@ export async function startPlayback(
       volume = assign.volume ? assign.volume : Vars.BOT_DEFAULT_VOLUME;
     }
 
-    Log.debug(`Setting volume to ${Vars.BOT_DEFAULT_VOLUME}`);
+    Log.debug(`Setting volume to ${volume}`);
 
-    resource.volume?.setVolume(Vars.BOT_DEFAULT_VOLUME);
+    resource.volume?.setVolume(volume);
   }
 
   const player = createAudioPlayer();

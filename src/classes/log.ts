@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import chalkTemplate from "chalk-template";
 
 export class Log {
@@ -14,7 +16,11 @@ export class Log {
   }
 
   public static debug(message: unknown) {
-    if (process.env.NODE_ENV !== "development") return;
-    console.debug(chalkTemplate`{bgMagenta [DEBUG]} ${JSON.stringify(message, null, 4)}`);
+    if (process.env.NODE_ENV !== "development") {
+      return;
+    }
+    console.debug(
+      chalkTemplate`{bgMagenta [DEBUG]} ${JSON.stringify(message, null, 4)}`
+    );
   }
 }

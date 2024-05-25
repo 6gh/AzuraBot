@@ -1,12 +1,18 @@
 export function _GetVariables(): Variables {
-  if (!process.env.AZURACAST_API_URL)
+  if (!process.env.AZURACAST_API_URL) {
     throw new Error("AZURACAST_API_URL is defined");
-  if (!process.env.AZURACAST_API_KEY)
-    throw new Error("AZURACAST_API_KEY is not defined");
+  }
 
-  if (!process.env.BOT_TOKEN) throw new Error("BOT_TOKEN is not defined");
-  if (!process.env.BOT_DATABASE_URL)
+  if (!process.env.AZURACAST_API_KEY) {
+    throw new Error("AZURACAST_API_KEY is not defined");
+  }
+
+  if (!process.env.BOT_TOKEN) {
+    throw new Error("BOT_TOKEN is not defined");
+  }
+  if (!process.env.BOT_DATABASE_URL) {
     throw new Error("BOT_DATABASE_URL is not defined");
+  }
 
   const ownerID = process.env.BOT_OWNER_ID;
   const prefix = process.env.BOT_PREFIX || "~";

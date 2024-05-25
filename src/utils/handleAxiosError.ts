@@ -1,4 +1,5 @@
 import { AxiosError, isAxiosError } from "axios";
+import { Log } from "../classes/log.js";
 
 export function HandleAxiosError(error: unknown | Error | AxiosError): string {
   let message = "[ERROR] Failed to reach AzuraCast API.";
@@ -26,8 +27,8 @@ export function HandleAxiosError(error: unknown | Error | AxiosError): string {
   } else {
     message += "An unknown error occurred.";
   }
-  console.error(message);
-  console.error(error);
+  Log.error(message);
+  Log.error(error);
 
   return message;
 }

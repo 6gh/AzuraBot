@@ -8,7 +8,9 @@ export default new SlashCommand(
     .setName("nowplaying")
     .setDescription("Get the currently playing song"),
   async ({ interaction }) => {
-    if (!interaction.guildId) return;
+    if (!interaction.guildId) {
+      return;
+    }
 
     await interaction.deferReply();
 

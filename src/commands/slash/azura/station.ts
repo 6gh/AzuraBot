@@ -70,13 +70,17 @@ export default new SlashCommand(
         )
     ),
   async ({ interaction }) => {
-    if (!interaction.guildId) return;
-    if (!interaction.guild) return;
+    if (!interaction.guildId) {
+      return;
+    }
+    if (!interaction.guild) {
+      return;
+    }
 
     switch (interaction.options.getSubcommandGroup()) {
       case "quality":
         switch (interaction.options.getSubcommand()) {
-          case "list":
+          case "list": {
             await interaction.deferReply();
 
             const assigned = await prisma.assigns.findFirst({
@@ -122,8 +126,9 @@ export default new SlashCommand(
 
             await interaction.editReply({ embeds: [embed] });
             break;
+          }
 
-          case "select":
+          case "select": {
             await interaction.deferReply();
 
             const mountId = interaction.options.getInteger("mount");
@@ -168,6 +173,7 @@ export default new SlashCommand(
               `:white_check_mark: Selected mount point **${mount.name}** for **${assigned_.name}**`
             );
             break;
+          }
 
           default:
             await interaction.reply(":x: Invalid subcommand");
@@ -177,7 +183,7 @@ export default new SlashCommand(
 
       default:
         switch (interaction.options.getSubcommand()) {
-          case "list":
+          case "list": {
             await interaction.deferReply();
 
             const stations = await azuraClient.Stations.getAll();
@@ -200,15 +206,18 @@ export default new SlashCommand(
 
             await interaction.editReply({ embeds: [embed] });
             break;
+          }
 
-          case "assign":
+          case "assign": {
             await interaction.deferReply();
 
             const stationId = interaction.options.getInteger("station");
             const vc = interaction.options.getChannel("vc");
 
             if (!stationId || !vc) {
-              await interaction.editReply(":x: Invalid station or voice channel");
+              await interaction.editReply(
+                ":x: Invalid station or voice channel"
+              );
               return;
             }
 
@@ -239,8 +248,9 @@ export default new SlashCommand(
               `:white_check_mark: Assigned station **${station.name}** to ${vc.name} in this server.`
             );
             break;
+          }
 
-          case "pause":
+          case "pause": {
             await interaction.deferReply();
 
             const assigned = await prisma.assigns.findFirst({
@@ -281,8 +291,9 @@ export default new SlashCommand(
                 ":pause_button: Radio paused, and auto-joining disabled. Resume with /station resume",
             });
             break;
+          }
 
-          case "resume":
+          case "resume": {
             await interaction.deferReply();
 
             const assign = await prisma.assigns.findFirst({
@@ -337,9 +348,9 @@ export default new SlashCommand(
                 ":arrow_forward: Radio resumed, and auto-joining enabled. Pause with /station pause",
             });
             break;
+          }
 
           default:
-            console.log();
             await interaction.reply(":skull: Invalid subcommand");
             break;
         }

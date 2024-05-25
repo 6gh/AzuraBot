@@ -5,7 +5,7 @@ export default new SlashCommand(
   new SlashCommandBuilder()
     .setName("ping")
     .setDescription("Get the bot's ping"),
-  async ({ interaction }) => {
+  ({ interaction }) => {
     interaction.reply(`Pong! ${interaction.client.ws.ping}ms`);
   }
 );

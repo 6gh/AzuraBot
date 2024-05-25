@@ -1,13 +1,13 @@
 import { BotEvent } from "../../classes/event.js";
 import { azuraClient, prisma } from "../../index.js";
-import {
-  getVoiceConnection,
-} from "@discordjs/voice";
+import { getVoiceConnection } from "@discordjs/voice";
 import { Log } from "../../classes/log.js";
 import { startPlayback } from "../../utils/startPlayback.js";
 
 export default new BotEvent("voiceStateUpdate", async (oldState, newState) => {
-  if (newState.member?.user.bot) return;
+  if (newState.member?.user.bot) {
+    return;
+  }
 
   if (newState.channelId !== null && newState.channel !== null) {
     Log.debug(`voiceStateUpdate called; member joined: ${newState.channelId}`);

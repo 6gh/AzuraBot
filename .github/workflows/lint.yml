@@ -1,0 +1,29 @@
+name: Lint project
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: "Run linters"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9.1.1
+      - uses: actions/setup-node@v4
+        with:
+          cache: "pnpm"
+          node-version: 20
+      - name: Install dependencies
+        run: pnpm install
+      - name: Lint Action
+        run: pnpm run lint

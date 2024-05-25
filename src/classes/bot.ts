@@ -50,14 +50,12 @@ export class AzuraBot extends Client {
         .default as TextCommand | undefined;
 
       if (!command) {
-        console.warn(
-          `[WARN] Command ${file.name} does not have a default export`
-        );
+        Log.warn(`[WARN] Command ${file.name} does not have a default export`);
         continue;
       }
 
       if (!command.name || !command.execute) {
-        console.warn(
+        Log.warn(
           `[WARN] Command ${file.name} does not have a name or execute function`
         );
         continue;
@@ -80,14 +78,12 @@ export class AzuraBot extends Client {
         .default as SlashCommand | undefined;
 
       if (!command) {
-        console.warn(
-          `[WARN] Command ${file.name} does not have a default export`
-        );
+        Log.warn(`[WARN] Command ${file.name} does not have a default export`);
         continue;
       }
 
       if (!command.meta.name || !command.execute) {
-        console.warn(
+        Log.warn(
           `[WARN] Command ${file.name} does not have a name or execute function`
         );
         continue;
@@ -117,14 +113,12 @@ export class AzuraBot extends Client {
         .default as BotEvent<keyof ClientEvents> | undefined;
 
       if (!event) {
-        console.warn(
-          `[WARN] Event ${file.name} does not have a default export`
-        );
+        Log.warn(`[WARN] Event ${file.name} does not have a default export`);
         continue;
       }
 
       if (!event.event || !event.execute) {
-        console.warn(
+        Log.warn(
           `[WARN] Event ${file.name} does not have an event or execute function`
         );
         continue;
