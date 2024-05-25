@@ -47,15 +47,22 @@ export default new SlashCommand(
       });
     }
 
-    // TODO: Implement custom fields
-    // now_playing.now_playing?.song?.custom_fields?.forEach((field) => {
-    //     const [key, value] = field.split(":");
-    //     fields.push({
-    //         name: key,
-    //         value,
-    //         inline: true,
-    //     });
-    // });
+    if (now_playing.now_playing?.song?.custom_fields) {
+      const customFields = now_playing.now_playing?.song
+        ?.custom_fields as unknown as { [key: string]: string | null };
+      const entries = Object.entries(customFields);
+
+      entries.forEach(([key, value]) => {
+        if (value) {
+          fields.push({
+            // TODO: Find a way to get the non-API version of the field name
+            name: key === "original_video" ? "Original Video" : key,
+            value,
+            inline: false,
+          });
+        }
+      });
+    }
 
     await interaction.editReply({
       content: entry.paused

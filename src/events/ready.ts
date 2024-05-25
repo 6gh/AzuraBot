@@ -67,7 +67,10 @@ export default new BotEvent("ready", async (client) => {
         return;
       }
 
-      if (channel.isVoiceBased() && channel.members.size > 0) {
+      if (
+        channel.isVoiceBased() &&
+        channel.members.filter((member) => !member.user.bot).size > 0
+      ) {
         const station = await azuraClient.Stations.get(assign.radioStation);
 
         const selectedAudio =
