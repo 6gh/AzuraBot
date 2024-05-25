@@ -67,7 +67,9 @@ export default new SlashCommand(
                   now_playing.now_playing?.song?.artist || "Unknown Artist"
                 } ~ ${now_playing.now_playing?.song?.title || "Unknown Title"}`
               )
-              .setThumbnail(now_playing.now_playing?.song?.art ?? null)
+              .setThumbnail(
+                now_playing.now_playing?.song?.art as unknown as string
+              )
               // ▶ 🔘▬▬▬▬▬▬▬▬▬▬▬ [00:10/03:15] 🔊
               .setDescription(
                 `▶ ${formatProgress(

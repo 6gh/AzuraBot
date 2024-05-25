@@ -28,7 +28,7 @@ export default new BotEvent("messageCreate", async (message) => {
       console.error(`Error executing command ${command}: ${error}`);
     }
     message.reply(
-      "There was an error trying to execute that command! Please try again later."
+      ":skull: There was an error trying to execute that command! Please try again later."
     );
   }
 });

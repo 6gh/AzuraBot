@@ -7,7 +7,7 @@ export default new TextCommand({
   name: "reload",
   execute: async ({ message, args, bot }) => {
     if (!message.guild) {
-      message.reply("This command can only be used in servers");
+      message.reply(":skull: This command can only be used in servers");
       return;
     }
 

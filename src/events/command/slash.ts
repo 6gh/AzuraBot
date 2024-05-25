@@ -25,7 +25,7 @@ export default new BotEvent("interactionCreate", async (interaction) => {
     }
     interaction.reply({
       content:
-        "There was an error trying to execute that command! Please try again later.",
+        ":skull: There was an error trying to execute that command! Please try again later.",
       ephemeral: true,
     });
   }

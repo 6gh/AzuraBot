@@ -128,7 +128,7 @@ export default new SlashCommand(
 
             const mountId = interaction.options.getInteger("mount");
             if (!mountId) {
-              await interaction.editReply("Invalid mount point");
+              await interaction.editReply(":x: Invalid mount point");
               return;
             }
 
@@ -151,7 +151,7 @@ export default new SlashCommand(
 
             const mount = assigned_.mounts.find((m) => m.id === mountId);
             if (!mount) {
-              await interaction.editReply("Invalid mount point");
+              await interaction.editReply(":x: Invalid mount point");
               return;
             }
 
@@ -165,12 +165,12 @@ export default new SlashCommand(
             });
 
             await interaction.editReply(
-              `Selected mount point **${mount.name}** for **${assigned_.name}**`
+              `:white_check_mark: Selected mount point **${mount.name}** for **${assigned_.name}**`
             );
             break;
 
           default:
-            await interaction.reply("Invalid subcommand");
+            await interaction.reply(":x: Invalid subcommand");
             break;
         }
         break;
@@ -208,7 +208,7 @@ export default new SlashCommand(
             const vc = interaction.options.getChannel("vc");
 
             if (!stationId || !vc) {
-              await interaction.editReply("Invalid station or voice channel");
+              await interaction.editReply(":x: Invalid station or voice channel");
               return;
             }
 
@@ -216,7 +216,7 @@ export default new SlashCommand(
               vc.type !== ChannelType.GuildVoice &&
               vc.type !== ChannelType.GuildStageVoice
             ) {
-              await interaction.editReply("Invalid voice channel type");
+              await interaction.editReply(":x: Invalid voice channel type");
               return;
             }
 
@@ -236,7 +236,7 @@ export default new SlashCommand(
             });
 
             await interaction.editReply(
-              `Assigned station **${station.name}** to ${vc.name} in this server.`
+              `:white_check_mark: Assigned station **${station.name}** to ${vc.name} in this server.`
             );
             break;
 
@@ -340,7 +340,7 @@ export default new SlashCommand(
 
           default:
             console.log();
-            await interaction.reply("Invalid subcommand");
+            await interaction.reply(":skull: Invalid subcommand");
             break;
         }
         break;
